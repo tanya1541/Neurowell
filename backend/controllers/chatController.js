@@ -145,7 +145,6 @@ async function handleAssessment(session, user, answers, res) {
     // Resend current group if no answers provided
     return sendAssessmentGroup(session, res, session.assessmentGroupIndex)
   }
-
   // Validate: 1–5 only
   const sanitised = answers.map(a => ({
     questionId: a.questionId,
@@ -254,22 +253,23 @@ async function handleTriage(session, user, text,  fromOption, res) {
 
   // 4. Dynamic tool picker — build options at runtime
   if (session.currentNodeId === 'tool_picker') {
-    const toolOptions = toolsConfig
-      .filter(t => t.minStage <= user.storiStage)
-      .map(t => ({ label: t.name, action: `launch:${t.id}` }))
-    const chosen = toolOptions.find(o =>
-      o.label.toLowerCase() === text.toLowerCase()
-    )
-    if (!chosen) {
-      return res.json({
-        mode:    'triage',
-        reply:   node.bot,
-        options: toolOptions,
-        sessionId: session._id,
-      })
-    }
-    return handleAction(chosen.action, null, session, user, res)
+  const toolOptions = toolsConfig
+    .filter(t => t.minStage <= user.storiStage && t.id !== 'worry')
+    .flatMap(t => {
+      if (t.id === 'worry') return [] // excluded above
+      return [{ label: t.name, action: `launch:${t.id}` }]
+    })
+  // Add worry variants manually
+  if (user.storiStage >= 3) {
+    toolOptions.push({ label: 'Worry Tool — practical',      action: 'launch:worryPractical' })
+    toolOptions.push({ label: 'Worry Tool — hypothetical',   action: 'launch:worryHypothetical' })
   }
+  const chosen = toolOptions.find(o => o.label.toLowerCase() === text.toLowerCase())
+  if (!chosen) {
+    return res.json({ mode: 'triage', reply: node.bot, options: toolOptions, sessionId: session._id })
+  }
+  return handleAction(chosen.action, null, session, user, res)
+}
 
   // 5. Match user text to a node option
   const visibleOptions = filterOptions(node.options, user.storiStage)

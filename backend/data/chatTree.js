@@ -523,7 +523,6 @@ const chatTree = {
       { label: "struggling or feeling low", next: 'low_opening' },
       { label: "anxious or worried",        next: 'anxious_opening' },
       { label: "checking in",               action: 'launch:checklist' },
-      { label: "i know what i want to do",  next: 'tool_picker' },
     ],
   },
 
@@ -533,7 +532,6 @@ const chatTree = {
       { label: "struggling — need support", next: 'low_opening' },
       { label: "anxious or worried",        next: 'anxious_opening' },
       { label: "checking in",               action: 'launch:checklist' },
-      { label: "i know what i want to do",  next: 'tool_picker' },
     ],
   },
 
@@ -543,7 +541,6 @@ const chatTree = {
       { label: "struggling — need support", next: 'low_opening' },
       { label: "anxiety or avoidance",      next: 'anxious_opening' },
       { label: "checking in",               action: 'launch:checklist' },
-      { label: "i know what i want to do",  next: 'tool_picker' },
     ],
   },
 
@@ -553,7 +550,6 @@ const chatTree = {
       { label: "feeling low or struggling", next: 'low_opening' },
       { label: "anxious or worried",        next: 'anxious_opening' },
       { label: "checking in",               action: 'launch:checklist' },
-      { label: "i know what i want to do",  next: 'tool_picker' },
     ],
   },
 
